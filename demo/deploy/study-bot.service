@@ -1,0 +1,16 @@
+[Unit]
+Description=Discord Study Time Checker Bot
+After=network.target postgresql.service
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/discord-time-checker/demo
+EnvironmentFile=/home/ubuntu/discord-time-checker/demo/.env
+ExecStart=/usr/bin/java -Xmx400m -XX:+UseSerialGC -jar /home/ubuntu/discord-time-checker/demo/build/libs/demo-0.0.1-SNAPSHOT.jar
+SuccessExitStatus=143
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
