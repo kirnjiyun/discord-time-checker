@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "rootDir": "src",
+    "outDir": "dist",
+    "strict": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src/**/*.ts"],
+
+  // ts-node 는 기본적으로 include 를 무시하고 실제로 require 된 파일만 컴파일한다.
+  // 그러면 src/types/discord.d.ts 의 타입 확장(Client.commands)이 적용되지 않아
+  // "Property 'commands' does not exist on type 'Client'" 에러가 난다.
+  // files: true 로 두면 include 전체를 읽어서 .d.ts 도 함께 로드한다.
+  "ts-node": {
+    "files": true
+  }
+}
