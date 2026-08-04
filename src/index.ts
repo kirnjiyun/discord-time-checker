@@ -6,6 +6,7 @@ import { Command } from './types/command';
 import { loadStore, saveStore } from './services/screenShareStore';
 import { shutdownTracker, startAutoFlush } from './services/screenShareTracker';
 import { startReportScheduler, stopReportScheduler } from './services/reportScheduler';
+import { startGraceWatcher, stopGraceWatcher } from './services/graceWatcher';
 
 /** 이벤트 파일이 export 해야 하는 형태 */
 interface BotEvent {
@@ -79,6 +80,7 @@ startAutoFlush();
 function gracefulShutdown(signal: string): void {
   console.log(`\n🛑 ${signal} 수신 — 기록을 저장하고 종료합니다.`);
   stopReportScheduler();
+  stopGraceWatcher();
   shutdownTracker();
   client.destroy();
   process.exit(0);
@@ -95,7 +97,10 @@ process.on('unhandledRejection', (error) => {
 });
 
 // 로그인 이후에 자정 결산 스케줄러를 켠다.
-client.once('clientReady', () => startReportScheduler(client));
+client.once('clientReady', () => {
+  startReportScheduler(client);
+  startGraceWatcher(client);
+});
 
 client.login(config.token).catch((error) => {
   console.error('\n❌ 로그인 실패. DISCORD_TOKEN 이 올바른지 확인해 주세요.');

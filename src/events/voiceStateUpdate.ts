@@ -1,5 +1,6 @@
 import { Events, VoiceState } from 'discord.js';
 import { startSession, stopSession } from '../services/screenShareTracker';
+import { handleVoiceUpdate } from '../services/graceWatcher';
 import { formatDuration } from '../utils/time';
 
 /**
@@ -20,6 +21,9 @@ export default {
 
     const guildId = newState.guild.id;
     const userId = member.id;
+
+    // 스터디 채널 유예시간 감시 (화면공유 집계와 별개로 동작)
+    handleVoiceUpdate(oldState, newState);
 
     const wasStreaming = oldState.streaming === true;
     const isStreaming = newState.streaming === true;

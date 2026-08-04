@@ -20,6 +20,12 @@ const GENERAL_COMMANDS = [
   { name: '/embed', description: 'embed 메시지를 만들어 보내요.' },
 ];
 
+const STUDY_COMMANDS = [
+  { name: '/warning show [user]', description: '경고·출석 현황을 확인해요.' },
+  { name: '/warning reset <user>', description: '경고를 초기화해요. **서버 관리** 권한 필요.' },
+  { name: '/rule show|set|on|off', description: '유예시간·출석기준·경고 규칙을 설정해요. **서버 관리** 권한 필요.' },
+];
+
 const SCREENSHARE_COMMANDS = [
   { name: '/screentime [user]', description: '화면공유 누적 시간을 조회해요.' },
   { name: '/ranking [period]', description: '랭킹을 보여줘요. (오늘/어제/이번주/지난주/전체)' },
@@ -57,6 +63,7 @@ const help: Command = {
       .addFields(
         { name: '🟢 일반', value: toField(GENERAL_COMMANDS) },
         { name: '🖥️ 화면공유 시간', value: toField(SCREENSHARE_COMMANDS) },
+        { name: '📋 스터디 규칙', value: toField(STUDY_COMMANDS) },
         { name: '🛠️ 관리', value: toField(MODERATION_COMMANDS) },
       )
       .setFooter({ text: '권한이 없는 명령어는 목록에서 보이지 않을 수 있어요.' })

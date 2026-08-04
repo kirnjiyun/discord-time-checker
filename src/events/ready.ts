@@ -1,5 +1,6 @@
 import { Client, Events } from 'discord.js';
 import { startSession } from '../services/screenShareTracker';
+import { resumeWaiting } from '../services/graceWatcher';
 
 /**
  * 봇이 켜졌을 때, 이미 화면공유를 켜 둔 사람이 있으면
@@ -34,6 +35,11 @@ export default {
     const resumed = resumeActiveStreams(client);
     if (resumed > 0) {
       console.log(`🔴 이미 화면공유 중인 ${resumed}명의 기록을 이어서 시작합니다.`);
+    }
+
+    const waiting = resumeWaiting(client);
+    if (waiting > 0) {
+      console.log(`👀 스터디 채널 대기자 ${waiting}명을 감시 목록에 넣었습니다.`);
     }
 
     console.log('   (명령어가 안 보이면 npm run deploy 를 실행했는지 확인하세요)\n');

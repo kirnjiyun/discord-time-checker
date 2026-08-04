@@ -14,7 +14,11 @@ import {
   requireMemberPermission,
 } from '../utils/permissions';
 import { getSettings, updateSettings } from '../services/screenShareStore';
-import { buildDailyReport, buildWeeklyReport } from '../services/reportScheduler';
+import {
+  buildDailyReport,
+  buildWeeklyReport,
+  buildWeeklyWarningReport,
+} from '../services/reportScheduler';
 
 const ALLOWED_CHANNEL_TYPES = [
   ChannelType.GuildText,
@@ -111,17 +115,19 @@ const report: Command = {
 
     // test — 지금 시점 기준으로 "어제 / 지난주" 결산을 미리 보여준다.
     const now = Date.now();
+    // settle 인자를 주지 않으므로 출석일/경고가 실제로 바뀌지는 않는다.
     const daily = buildDailyReport(guild.id, now);
     const weekly = buildWeeklyReport(guild.id, now);
+    const warning = buildWeeklyWarningReport(guild.id, now);
 
-    if (!daily && !weekly) {
+    if (!daily && !weekly && !warning) {
       throw new CommandError(
         '아직 결산할 기록이 없어요.\n음성채널에서 화면공유를 켠 뒤 다시 시도해 주세요.',
       );
     }
 
     await interaction.reply({
-      embeds: [daily, weekly].filter((embed) => embed !== null),
+      embeds: [daily, weekly, warning].filter((embed) => embed !== null),
       flags: MessageFlags.Ephemeral,
     });
   },
